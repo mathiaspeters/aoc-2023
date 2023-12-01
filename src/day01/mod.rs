@@ -5,29 +5,31 @@ pub fn day1() {
 
 pub fn part1() -> usize {
     raw_input1()
-    .lines()
-    .map(|line| line.chars().filter_map(|c| c.to_digit(10).map(|r| r as usize)).collect::<Vec<_>>())
-    .map(|is| {
-        (*is.first().unwrap() * 10) + *is.last().unwrap()
-    })
-    .sum()
+        .lines()
+        .map(|line| {
+            line.chars()
+                .filter_map(|c| c.to_digit(10).map(|r| r as usize))
+                .collect::<Vec<_>>()
+        })
+        .map(|is| (*is.first().unwrap() * 10) + *is.last().unwrap())
+        .sum()
 }
 
 pub fn part2() -> usize {
     raw_input2()
         .lines()
         .map(|line| find_nums(line))
-        .map(|is| {
-            (*is.first().unwrap() * 10) + *is.last().unwrap()
-        })
+        .map(|is| (*is.first().unwrap() * 10) + *is.last().unwrap())
         .sum()
-        
 }
 
 fn find_nums(cs: &str) -> Vec<usize> {
     let cs = cs.chars().collect::<Vec<_>>();
-    let check = |i: usize, c: char| -> bool {
-        matches!(cs.get(i), Some(n) if *n == c)
+    let check_all = |start: usize, letters: &str| -> bool {
+        letters
+            .chars()
+            .enumerate()
+            .all(|(i, c)| matches!(cs.get(start + i), Some(n) if *n == c))
     };
     let mut output = vec![];
     for (i, c) in cs.iter().enumerate() {
@@ -42,48 +44,29 @@ fn find_nums(cs: &str) -> Vec<usize> {
             '7' => output.push(7),
             '8' => output.push(8),
             '9' => output.push(9),
-            'o' => {
-                if check(i+1, 'n') && check(i+2, 'e') {
-                    output.push(1)
+            _ => {
+                if check_all(i, "zero") {
+                    output.push(0);
+                } else if check_all(i, "one") {
+                    output.push(1);
+                } else if check_all(i, "two") {
+                    output.push(2);
+                } else if check_all(i, "three") {
+                    output.push(3);
+                } else if check_all(i, "four") {
+                    output.push(4);
+                } else if check_all(i, "five") {
+                    output.push(5);
+                } else if check_all(i, "six") {
+                    output.push(6);
+                } else if check_all(i, "seven") {
+                    output.push(7);
+                } else if check_all(i, "eight") {
+                    output.push(8);
+                } else if check_all(i, "nine") {
+                    output.push(9);
                 }
             }
-            't' => {
-                if check(i+1, 'w') && check(i+2, 'o') {
-                    output.push(2)
-                } else if check(i+1, 'h') && check(i+2, 'r') && check(i+3, 'e') && check(i+4, 'e') {
-                    output.push(3)
-                }
-            }
-            'f' => {
-                if check(i+1, 'o') && check(i+2, 'u') && check(i+3, 'r') {
-                    output.push(4)
-                } else if check(i+1, 'i') && check(i+2, 'v') && check(i+3, 'e') {
-                    output.push(5)
-                }
-            }
-            's' => {
-                if check(i+1, 'i') && check(i+2, 'x') {
-                    output.push(6)
-                } else if check(i+1, 'e') && check(i+2, 'v') && check(i+3, 'e') && check(i+4, 'n') {
-                    output.push(7)
-                }
-            }
-            'e' => {
-                if check(i+1, 'i') && check(i+2, 'g') && check(i+3, 'h') && check(i+4, 't') {
-                    output.push(8)
-                }
-            }
-            'n' => {
-                if check(i+1, 'i') && check(i+2, 'n') && check(i+3, 'e') {
-                    output.push(9)
-                }
-            }
-            'z' => {
-                if check(i+1, 'e') && check(i+2, 'r') && check(i+3, 'o') {
-                    output.push(0)
-                }
-            }
-            _ => {}
         }
     }
     output
